@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIRE FF STORE</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0b0f1a;
+  color: white;
+}
+
+header {
+  background: linear-gradient(90deg,#ff0000,#ff6600);
+  padding: 15px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.container {
+  padding: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap: 15px;
+}
+
+.card {
+  background: #121826;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #000;
+}
+
+.card h3 {
+  margin: 0 0 10px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.orderBtn {
+  background: #25D366;
+  color: white;
+}
+
+.deleteBtn {
+  background: red;
+  color: white;
+}
+
+#adminPanel {
+  display: none;
+  padding: 15px;
+  background: #111;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: none;
+}
+</style>
+
+</head>
+<body>
+
+<header>🔥 FIRE FF STORE 🔥</header>
+
+<div class="container" id="products"></div>
+
+<div id="adminPanel">
+  <h2>Admin Panel</h2>
+  <input type="text" id="name" placeholder="Product Name">
+  <input type="number" id="price" placeholder="Price PKR">
+  <button onclick="addProduct()">Add Product</button>
+</div>
+
+<script>
+let whatsapp = "923352523630";
+let password = "5560";
+
+let products = JSON.parse(localStorage.getItem("products")) || [
+  {name:"Free Fire A/Z Knwo Contect Whtsapp"},
+
+];
+
+function save(){
+  localStorage.setItem("products", JSON.stringify(products));
+}
+
+function render(){
+  let html = "";
+  products.forEach((p,i)=>{
+    html += `
+    <div class="card">
+      <h3>${p.name}</h3>
+      <p>Price: ${p.price} PKR</p>
+      <button class="orderBtn" onclick="order('${p.name}')">Order</button>
+      ${adminMode ? `<button class="deleteBtn" onclick="del(${i})">Delete</button>` : ""}
+    </div>`;
+  });
+  document.getElementById("products").innerHTML = html;
+}
+
+function order(name){
+  let msg = "Order: " + name;
+  window.open("https://wa.me/"+whatsapp+"?text="+encodeURIComponent(msg));
+}
+
+function addProduct(){
+  let name = document.getElementById("name").value;
+  let price = document.getElementById("price").value;
+  if(name && price){
+    products.push({name,price});
+    save();
+    render();
+  }
+}
+
+function del(i){
+  products.splice(i,1);
+  save();
+  render();
+}
+
+let adminMode = false;
+
+document.addEventListener("dblclick", ()=>{
+  let pass = prompt("Enter Admin Password:");
+  if(pass === password){
+    adminMode = true;
+    document.getElementById("adminPanel").style.display = "block";
+    render();
+  }
+});
+
+render();
+</script>
+
+</body>
+</html>
